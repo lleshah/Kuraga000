@@ -1,0 +1,8 @@
+﻿  tablica.cpp
+C:\Users\Student\Documents\1РУП-9-26_Молошник Алексей\tablica\tablica\tablica.cpp(8,1): error C4430: отсутствует спецификатор типа - предполагается int. Примечание. C++ не поддерживает int по умолчанию
+C:\Users\Student\Documents\1РУП-9-26_Молошник Алексей\tablica\tablica\tablica.cpp(8,1): error C2365: main: переопределение; предыдущим определением было "функция"
+      C:\Users\Student\Documents\1РУП-9-26_Молошник Алексей\tablica\tablica\tablica.cpp(4,5):
+       см. объявление "main"
+  
+C:\Users\Student\Documents\1РУП-9-26_Молошник Алексей\tablica\tablica\tablica.cpp(8,6): error C2146: синтаксическая ошибка: отсутствие ";" перед идентификатором "tjj"
+C:\Users\Student\Documents\1РУП-9-26_Молошник Алексей\tablica\tablica\tablica.cpp(37,7): error C2017: неизвестная последовательность выхода
