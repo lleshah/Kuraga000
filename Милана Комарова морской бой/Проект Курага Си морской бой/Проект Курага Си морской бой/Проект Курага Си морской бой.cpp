@@ -20,7 +20,7 @@ void printGrid(char grid[DLINA][SHIRINA])
 	printf("\n");
 }
 
-void initGrid(char grid[DLINA][SHIRINA])
+void gazan(char grid[DLINA][SHIRINA])
 {
 	for (int i = 0; i < DLINA; i++)
 	{
@@ -78,8 +78,8 @@ int main()
 	char hitsGrid[DLINA][SHIRINA];
 	char shipsGrid[DLINA][SHIRINA];
 
-	initGrid(hitsGrid);
-	initGrid(shipsGrid);
+	gazan(hitsGrid);
+	gazan(shipsGrid);
 
 
 	shipsGrid[2][2] = 'K';
