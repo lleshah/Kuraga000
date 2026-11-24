@@ -47,38 +47,72 @@ void initGrid(char grid[DLINA][SHIRINA])
 
 bool input(char hitsGrid[DLINA][SHIRINA], char shipsGrid[DLINA][SHIRINA])
 {
-	int stroka;
-	char nomber, stolb;
-	printf("Введите строку и столбец или 0 для выхода: ");
-	scanf("%d", &stroka);
-	if (stroka == 0)
-	{
-		return false;
+    int stroka;
+    char stolbStr[10]; 
+    int stolb = 0;
+    char nomber;
 
-	}
-	scanf("%d", &stolb);
-	if (stolb == "А")
+    printf("Введите строку и столбец (букву от А до И) или 0 для выхода: ");
+    scanf("%d", &stroka);
+    if (stroka == 0)
+    {
+        return false;
+    }
 
-		if (stroka >= 2 && stroka <= SHIRINA - 1)
-		{
-			if (shipsGrid[stroka - 1][stolb - 1] == 'K')
-			{
-				nomber = 'X';
-				printf("Попадание!\n");
-			}
-			else {
-				nomber = 'O';
-				printf("Промах!\n");
-			}
-			hitsGrid[stroka - 1][stolb - 1] = nomber;
-			return true;
-		}
-		else {
-			printf("Неправильно ввёл числа!\n");
-			return true;
-		}
-}
+    scanf("%9s", stolbStr);
+    if (strcmp(stolbStr, "А") == 0) {
+        stolb = 1;
+    }
+    else if (strcmp(stolbStr, "Б") == 0) {
+        stolb = 2;
+    }
+    else if (strcmp(stolbStr, "В") == 0) {
+        stolb = 3;
+    }
+    else if (strcmp(stolbStr, "Г") == 0) {
+        stolb = 4;
+    }
+    else if (strcmp(stolbStr, "Д") == 0) {
+        stolb = 5;
+    }
+    else if (strcmp(stolbStr, "Е") == 0) {
+        stolb = 6;
+    }
+    else if (strcmp(stolbStr, "Ё") == 0) {
+        stolb = 7;
+    }
+    else if (strcmp(stolbStr, "Ж") == 0) {
+        stolb = 8;
+    }
+    else if (strcmp(stolbStr, "З") == 0) {
+        stolb = 9;
+    }
+    else if (strcmp(stolbStr, "И") == 0) {
+        stolb = 10;
+    }
+    else {
+        printf("Такой буквы нет в диапазоне от А до И!\n");
+        return true; 
+    }
 
+    if (stroka >= 1 && stroka <= DLINA && stolb >= 1 && stolb <= SHIRINA)
+    {
+        if (shipsGrid[stroka - 1][stolb - 1] == 'K')
+        {
+            nomber = 'X';
+            printf("Попадание!\n");
+        }
+        else {
+            nomber = 'O';
+            printf("Промах!\n");
+        }
+        hitsGrid[stroka - 1][stolb - 1] = nomber;
+        return true;
+    }
+    else {
+        printf("Неверные координаты!\n");
+        return true;
+    }
 int main()
 {
 	setlocale(LC_ALL, "Russian");
