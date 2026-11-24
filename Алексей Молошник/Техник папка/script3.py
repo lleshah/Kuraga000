@@ -40,4 +40,4 @@ if errors_count > 0:
 result_cols = selected_cols + ['Цена_со_скидкой']
 print('\n--- Итоговая таблица ---')
 print(filtered_df[result_cols])
-filtered_df[result_cols].to_excel('Результат_обработки.xlsx', index=False) ывывывы
+filtered_df[result_cols].to_excel('Результат_обработки.xlsx', index=False)
