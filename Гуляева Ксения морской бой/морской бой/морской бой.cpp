@@ -4,7 +4,6 @@
 const int SIZE = 10;
 
 struct Ship {
-    int length;
     int row;
     int col;
     bool isHorizontal;
