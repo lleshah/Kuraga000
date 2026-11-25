@@ -8,11 +8,16 @@ const int DLINA = 12;
 const int SHIRINA = 12;
 
 void printGrid(char massiv[DLINA][SHIRINA]) {
-	printf("    А Б В Г Д Е Ж З И К \n");
+	printf("        А Б В Г Д Е Ж З И К \n");
 
 	for (int i = 0; i < DLINA; i++)
 	{
-		printf(" %d | ", i);
+		if (i == 0 || i == DLINA - 1) {
+			printf("    | ");
+		}
+		else {
+			printf(" %2d | ", i);
+		}
 
 		for (int j = 0; j < SHIRINA; j++)
 		{
@@ -88,9 +93,10 @@ int main()
 	shipsGrid[2][2] = 'K';
 	shipsGrid[2][3] = 'K';
 	shipsGrid[2][4] = 'K';
-	shipsGrid[4][5] = 'K';
+	shipsGrid[2][5] = 'K';
 	shipsGrid[5][5] = 'K';
-	shipsGrid[7][7] = 'K';
+	shipsGrid[5][6] = 'K';
+	shipsGrid[7][3] = 'K';
 
 	printf("Поле попаданий:\n");
 	printGrid(hitsGrid);
