@@ -1,138 +1,208 @@
-﻿
+﻿#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
+#include <time.h>
+#include <ctype.h>
 #include <locale.h>
 
-#define SIZE 10
+const int N = 12;
 
-struct Ship {
-    int length;
-    int row;
-    int col;
-    bool isHorizontal;
-};
+void initBoard(char b[12][12]) {
+    for (int i = 0; i < N; i++)
+        for (int j = 0; j < N; j++)
+            b[i][j] = (i == 0 || i == 11 || j == 0 || j == 11) ? ' ' : '.';
+}
 
-void initBoard(char board[SIZE][SIZE]) {
-    for (int i = 0; i < SIZE; i++) {
-        for (int j = 0; j < SIZE; j++) {
-            board[i][j] = '.';
+bool canPlace(char b[12][12], int r, int c, int len, int horiz) {
+    for (int i = 0; i < len; i++) {
+        int nr = r + (horiz ? 0 : i), nc = c + (horiz ? i : 0);
+        if (nr < 1 || nr > 10 || nc < 1 || nc > 10) return false;
+        for (int dr = -1; dr <= 1; dr++)
+            for (int dc = -1; dc <= 1; dc++)
+                if (b[nr + dr][nc + dc] == '#') return false;
+    }
+    return true;
+}
+
+void placeShip(char b[12][12], int r, int c, int len, int horiz) {
+    for (int i = 0; i < len; i++)
+        b[r + (horiz ? 0 : i)][c + (horiz ? i : 0)] = '#';
+}
+
+void autoPlace(char b[12][12], int count) {
+    for (int placed = 0; placed < count; ) {
+        int len = rand() % 4 + 1, r = rand() % 10 + 1, c = rand() % 10 + 1, h = rand() % 2;
+        if (canPlace(b, r, c, len, h)) {
+            placeShip(b, r, c, len, h);
+            placed++;
         }
     }
 }
 
-void placeShip(char board[SIZE][SIZE], struct Ship ship) {
-    for (int i = 0; i < ship.length; i++) {
-        if (ship.isHorizontal) {
-            if (ship.col + i < SIZE) {
-                board[ship.row][ship.col + i] = '#';
+void countShips(char b[12][12], int s[5]) {
+    for (int i = 0; i < 5; i++) s[i] = 0;
+    for (int r = 1; r <= 10; r++) {
+        for (int c = 1; c <= 10; c++) {
+            bool isShip = (b[r][c] == '#' || b[r][c] == 'X');
+            bool topShip = (b[r - 1][c] == '#' || b[r - 1][c] == 'X');
+            bool leftShip = (b[r][c - 1] == '#' || b[r][c - 1] == 'X');
+            if (isShip && !topShip && !leftShip) {
+                int len = 0;
+                bool alive = false;
+                int dr = (b[r + 1][c] == '#' || b[r + 1][c] == 'X') ? 1 : 0;
+                int dc = (dr == 0) ? 1 : 0;
+                while (b[r + len * dr][c + len * dc] == '#' || b[r + len * dr][c + len * dc] == 'X') {
+                    if (b[r + len * dr][c + len * dc] == '#') alive = true;
+                    len++;
+                }
+                if (alive && len <= 4) s[len]++;
             }
         }
-        else {
-            if (ship.row + i < SIZE) {
-                board[ship.row + i][ship.col] = '#';
+    }
+}
+
+void markSunk(char real[12][12], int r, int c) {
+    int r1 = r, r2 = r, c1 = c, c2 = c;
+    while (real[r1 - 1][c] == '#' || real[r1 - 1][c] == 'X') r1--;
+    while (real[r2 + 1][c] == '#' || real[r2 + 1][c] == 'X') r2++;
+    while (real[r][c1 - 1] == '#' || real[r][c1 - 1] == 'X') c1--;
+    while (real[r][c2 + 1] == '#' || real[r][c2 + 1] == 'X') c2++;
+
+    for (int i = r1; i <= r2; i++)
+        for (int j = c1; j <= c2; j++)
+            if (real[i][j] == '#') return;
+
+    for (int i = r1; i <= r2; i++) {
+        for (int j = c1; j <= c2; j++) {
+            for (int dr = -1; dr <= 1; dr++) {
+                for (int dc = -1; dc <= 1; dc++) {
+                    int nr = i + dr, nc = j + dc;
+                    if (nr >= 1 && nr <= 10 && nc >= 1 && nc <= 10 && real[nr][nc] == '.')
+                        real[nr][nc] = '0';
+                }
             }
         }
     }
 }
 
-void printBoard(char board[SIZE][SIZE], const char* title) {
-    printf("\n=== %s ===\n", title);
-    printf("  0 1 2 3 4 5 6 7 8 9\n");
-    for (int i = 0; i < SIZE; i++) {
-        printf("%d ", i);
-        for (int j = 0; j < SIZE; j++) {
-            printf("%c ", board[i][j]);
+void printBoards(char p1[12][12], char p2[12][12], bool showEnemy) {
+    int s1[5], s2[5];
+    countShips(p1, s1);
+    countShips(p2, s2);
+    printf("\n       ВАШЕ ПОЛЕ                  %s\n", showEnemy ? "ПОЛЕ ПРОТИВНИКА" : "ВАШИ ВЫСТРЕЛЫ");
+    printf("    A B C D E F G H I J        A B C D E F G H I J\n");
+    printf("  +---------------------+    +---------------------+\n");
+    for (int i = 1; i <= 10; i++) {
+        printf("%2d| ", i);
+        for (int j = 1; j <= 10; j++) printf("%c ", p1[i][j]);
+        printf("|  %2d| ", i);
+        for (int j = 1; j <= 10; j++) {
+            char ch = (!showEnemy && p2[i][j] == '#') ? '.' : p2[i][j];
+            printf("%c ", ch);
         }
-        printf("\n");
+        printf("|\n");
     }
+    printf("  +---------------------+    +---------------------+\n");
+    printf("Ваши корабли: [1]:%d [2]:%d [3]:%d [4]:%d\n", s1[1], s1[2], s1[3], s1[4]);
+    printf("Корабли врага:[1]:%d [2]:%d [3]:%d [4]:%d\n", s2[1], s2[2], s2[3], s2[4]);
 }
 
-// Функция выстрела
-void shoot(char enemyHidden[SIZE][SIZE], char playerShots[SIZE][SIZE], int row, int col) {
-    // Проверка на выход за границы поля
-    if (row < 0 || row >= SIZE || col < 0 || col >= SIZE) {
-        printf("Ошибка: координаты вне поля!\n");
-        return;
-    }
+int countChar(char b[12][12], char target) {
+    int cnt = 0;
+    for (int i = 1; i <= 10; i++)
+        for (int j = 1; j <= 10; j++)
+            if (b[i][j] == target) cnt++;
+    return cnt;
+}
 
-    // Проверка, стреляли ли уже в эту клетку
-    if (playerShots[row][col] != '.') {
-        printf("Вы уже стреляли в эту клетку!\n");
-        return;
+bool shoot(char enemy[12][12], int r, int c) {
+    if (r < 1 || r > 10 || c < 1 || c > 10 || enemy[r][c] == 'X' || enemy[r][c] == '0') {
+        printf("Некорректные координаты или вы уже стреляли сюда!\n");
+        return false;
     }
-
-    // Проверка попадания
-    if (enemyHidden[row][col] == '#') {
+    if (enemy[r][c] == '#') {
         printf("ПОПАДАНИЕ!\n");
-        playerShots[row][col] = 'X';
-        enemyHidden[row][col] = 'X';
+        enemy[r][c] = 'X';
+        markSunk(enemy, r, c);
     }
     else {
         printf("МИМО!\n");
-        playerShots[row][col] = 'O';
+        enemy[r][c] = '0';
+    }
+    return true;
+}
+
+void botShoot(char player[12][12]) {
+    while (true) {
+        int r = rand() % 10 + 1, c = rand() % 10 + 1;
+        if (player[r][c] == '.' || player[r][c] == '#') {
+            if (player[r][c] == '#') {
+                printf("Враг выстрелил в %c%d и ПОПАЛ!\n", 'A' + c - 1, r);
+                player[r][c] = 'X';
+                markSunk(player, r, c);
+            }
+            else {
+                printf("Враг выстрелил в %c%d и промахнулся.\n", 'A' + c - 1, r);
+                player[r][c] = '0';
+            }
+            break;
+        }
     }
 }
 
 int main() {
     setlocale(LC_ALL, "Russian");
+    srand((unsigned int)time(NULL));
 
-    char board1[SIZE][SIZE];      // Ваши корабли
-    char board2[SIZE][SIZE];      // Поле ваших выстрелов (видимое)
-    char enemyShips[SIZE][SIZE];  // Скрытое поле с кораблями соперника
+    char player[12][12], enemy[12][12];
+    initBoard(player);
+    initBoard(enemy);
 
-    initBoard(board1);
-    initBoard(board2);
-    initBoard(enemyShips);
-
-    // Для проверки добавим пару тестовых кораблей сопернику
-    struct Ship enemy1 = { 3, 2, 2, true };  // Корабль длиной 3 на строке 2, столбцах 2, 3, 4
-    struct Ship enemy2 = { 2, 5, 7, false }; // Корабль длиной 2 на столбце 7, строках 5, 6
-    placeShip(enemyShips, enemy1);
-    placeShip(enemyShips, enemy2);
-
-    // Расстановка ваших кораблей
     int count;
-    printf("Сколько кораблей добавить на 1-е поле: ");
-    scanf_s("%d", &count);
+    printf("Сколько кораблей добавить: ");
+    scanf("%d", &count);
+    autoPlace(enemy, count);
 
     for (int i = 0; i < count; i++) {
-        struct Ship ship;
-        int orientation;
-
-        printf("\nКорабль %d\n", i + 1);
-        printf("Длина (1-4): ");
-        scanf_s("%d", &ship.length);
-
-        printf("Строка (0-9): ");
-        scanf_s("%d", &ship.row);
-
-        printf("Столбец (0-9): ");
-        scanf_s("%d", &ship.col);
-
-        printf("Ориентация (1 - горизонтально, 0 - вертикально): ");
-        scanf_s("%d", &orientation);
-        ship.isHorizontal = (orientation == 1);
-
-        placeShip(board1, ship);
+        int len, row, horiz;
+        char colCh;
+        printf("\nКорабль %d (длина 1-4, координата A1..J10, ориентация 1-гор/0-верт): ", i + 1);
+        scanf("%d %c%d %d", &len, &colCh, &row, &horiz);
+        int col = toupper(colCh) - 'A' + 1;
+        if (len >= 1 && len <= 4 && canPlace(player, row, col, len, horiz)) {
+            placeShip(player, row, col, len, horiz);
+        }
+        else {
+            printf("Ошибка установки! Попробуйте снова.\n");
+            i--;
+        }
     }
 
-    printBoard(board1, "Поле 1 (Ваши корабли)");
-
-    // Цикл стрельбы
-    int shotRow, shotCol;
-    while (true) {
-        printBoard(board2, "Поле 2 (Ваши выстрелы)");
-        printf("\nВведите координаты выстрела (строка и столбец через пробел, или -1 для выхода): ");
-
-        scanf_s("%d", &shotRow);
-        if (shotRow == -1) {
-            printf("Выход из режима стрельбы.\n");
+    bool earlyExit = false;
+    while (countChar(player, '#') > 0 && countChar(enemy, '#') > 0) {
+        printBoards(player, enemy, false);
+        char colCh;
+        int row;
+        printf("\nВаш выстрел (например A5, или Q для выхода): ");
+        scanf(" %c", &colCh);
+        if (toupper(colCh) == 'Q') {
+            earlyExit = true;
             break;
         }
-        scanf_s("%d", &shotCol);
-
-        shoot(enemyShips, board2, shotRow, shotCol);
+        scanf("%d", &row);
+        int col = toupper(colCh) - 'A' + 1;
+        if (shoot(enemy, row, col) && countChar(enemy, '#') > 0) {
+            botShoot(player);
+        }
     }
+
+    printf("\n=== ИТОГИ ИГРЫ ===\n");
+    if (earlyExit) printf("Игра завершена досрочно.\n");
+    else if (countChar(enemy, '#') == 0) printf("ПОБЕДИТЕЛЬ: ИГРОК!\n");
+    else printf("ПОБЕДИТЕЛЬ: КОМПЬЮТЕР!\n");
+    printf("Ваши попадания: %d | Попадания врага: %d\n", countChar(enemy, 'X'), countChar(player, 'X'));
+    printBoards(player, enemy, true);
 
     return 0;
 }
