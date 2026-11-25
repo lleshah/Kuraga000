@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>18.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{3e9289a5-4890-4a4d-b079-dd360cad966f}</ProjectGuid>
-    <RootNamespace>ПроектКурагаСиморскойбой</RootNamespace>
+    <ProjectGuid>{1e71112b-b422-4a9b-bcb9-ac758b0b72d1}</ProjectGuid>
+    <RootNamespace>Морскойбой</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -139,7 +139,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Проект Курага Си морской бой.cpp" />
+    <ClCompile Include="Морской бой.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

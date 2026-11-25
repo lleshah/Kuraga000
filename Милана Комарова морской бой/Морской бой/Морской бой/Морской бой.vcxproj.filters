@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Проект Курага Си морской бой.cpp">
+    <ClCompile Include="Морской бой.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
