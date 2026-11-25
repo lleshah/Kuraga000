@@ -49,6 +49,61 @@ void ship() {
     printf("ВИДЫ КОРАБЛЕЙ И ИХ КОЛИЧЕСТВО:\n");
     printf("П - 4\nПП - 3\nППП - 2\nПППП - 1\n\n");
 }
+void locationship(char shipsGrid[DLINA][SHIRINA]) {
+    int stroka;
+    char stolbStr[10];
+    int stolb = 0;
+    printf("Введите координаты для всех однопалубных кораблей (П): ")
+        for (int i = 1, i <= 4, i++) {
+            printf("Корабль %d (строка и буква): ", i);
+            scanf("%d %9s", &stroka, stolbStr);
+            scanf("%9s", stolbStr);
+            if (strcmp(stolbStr, "А") == 0) {
+                stolb = 2;
+            }
+            else if (strcmp(stolbStr, "Б") == 0) {
+                stolb = 3;
+            }
+            else if (strcmp(stolbStr, "В") == 0) {
+                stolb = 4;
+            }
+            else if (strcmp(stolbStr, "Г") == 0) {
+                stolb = 5;
+            }
+            else if (strcmp(stolbStr, "Д") == 0) {
+                stolb = 6;
+            }
+            else if (strcmp(stolbStr, "Е") == 0) {
+                stolb = 7;
+            }
+            else if (strcmp(stolbStr, "Ж") == 0) {
+                stolb = 8;
+            }
+            else if (strcmp(stolbStr, "З") == 0) {
+                stolb = 9;
+            }
+            else if (strcmp(stolbStr, "И") == 0) {
+                stolb = 10;
+            }
+            else if (strcmp(stolbStr, "К") == 0) {
+                stolb = 11;
+            }
+            else {
+                printf("Такой буквы нет в поле от А до К!\n");
+                stolb = 0;
+            if (stroka >= 1 && stroka <= 10 && stolb >= 1 && stolb <= 10 && shipsGrid[stroka][stolb] == '.')
+            {
+                shipsGrid[stroka][stolb] = 'П';
+            }
+            else {
+                printf("Ошибка! Неверные координаты или клетка занята. Повторите ввод.\n");
+                i--; 
+             }
+            }
+            printf("\n");
+    }
+}
+
 bool input(char hitsGrid[DLINA][SHIRINA], char shipsGrid[DLINA][SHIRINA])
 {
     int stroka;
@@ -101,7 +156,7 @@ bool input(char hitsGrid[DLINA][SHIRINA], char shipsGrid[DLINA][SHIRINA])
 
     if (stroka >= 2 && stroka <= 10 && stolb >= 2 && stolb <= 11)
     {
-        if (shipsGrid[stroka ][stolb - 1] == 'П')
+        if (shipsGrid[stroka ][stolb ] == 'П')
         {
             nomber = 'X';
             printf("Попадание!\n");
@@ -110,7 +165,7 @@ bool input(char hitsGrid[DLINA][SHIRINA], char shipsGrid[DLINA][SHIRINA])
             nomber = 'O';
             printf("Промах!\n");
         }
-        hitsGrid[stroka ][stolb - 1] = nomber;
+        hitsGrid[stroka ][stolb ] = nomber;
         return true;
     }
     else {
