@@ -45,7 +45,10 @@ void initGrid(char grid[DLINA][SHIRINA])
 		}
 	}
 }
-
+void ship() {
+    printf("ВИДЫ КОРАБЛЕЙ И ИХ КОЛИЧЕСТВО:\n");
+    printf("П - 4\nПП - 3\nППП - 2\nПППП - 1\n\n");
+}
 bool input(char hitsGrid[DLINA][SHIRINA], char shipsGrid[DLINA][SHIRINA])
 {
     int stroka;
@@ -79,26 +82,26 @@ bool input(char hitsGrid[DLINA][SHIRINA], char shipsGrid[DLINA][SHIRINA])
     else if (strcmp(stolbStr, "Е") == 0) {
         stolb = 7;
     }
-    else if (strcmp(stolbStr, "Ё") == 0) {
+    else if (strcmp(stolbStr, "Ж") == 0) {
         stolb = 8;
     }
-    else if (strcmp(stolbStr, "Ж") == 0) {
+    else if (strcmp(stolbStr, "З") == 0) {
         stolb = 9;
     }
-    else if (strcmp(stolbStr, "З") == 0) {
+    else if (strcmp(stolbStr, "И") == 0) {
         stolb = 10;
     }
-    else if (strcmp(stolbStr, "И") == 0) {
+    else if (strcmp(stolbStr, "К") == 0) {
         stolb = 11;
     }
     else {
-        printf("Такой буквы нет в диапазоне от А до И!\n");
+        printf("Такой буквы нет в поле от А до К!\n");
         return true;
     }
 
     if (stroka >= 2 && stroka <= 10 && stolb >= 2 && stolb <= 11)
     {
-        if (shipsGrid[stroka ][stolb - 1] == 'K')
+        if (shipsGrid[stroka ][stolb - 1] == 'П')
         {
             nomber = 'X';
             printf("Попадание!\n");
@@ -123,19 +126,23 @@ int main()
 
 	char hitsGrid[DLINA][SHIRINA];
 	char shipsGrid[DLINA][SHIRINA];
-
+    ship();
 	initGrid(hitsGrid);
 	initGrid(shipsGrid);
 
 
-	shipsGrid[2][2] = 'K';
-	shipsGrid[2][3] = 'K';
-	shipsGrid[2][4] = 'K';
-	shipsGrid[4][5] = 'K';
-	shipsGrid[5][5] = 'K';
-	shipsGrid[7][7] = 'K';
-    shipsGrid[3][2] = 'K';
-    shipsGrid[10][10] = 'K';
+	shipsGrid[2][2] = 'П';
+	shipsGrid[2][3] = 'П';
+	shipsGrid[2][4] = 'П';
+	shipsGrid[4][5] = 'П';
+	shipsGrid[5][5] = 'П';
+	shipsGrid[7][7] = 'П';
+    shipsGrid[9][2] = 'П';
+    shipsGrid[9][3] = 'П';
+    shipsGrid[9][4] = 'П';
+    shipsGrid[9][5] = 'П';
+    shipsGrid[9][2] = 'П';
+    shipsGrid[10][10] = 'П';
 
 	printf("Поле попаданий:\n");
 	printGrid(hitsGrid);
