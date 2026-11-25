@@ -57,10 +57,8 @@ bool input(char hitsGrid[DLINA][SHIRINA], char shipsGrid[DLINA][SHIRINA])
 
 	}
 	scanf("%d", &stolb);
-	if (stroka >= 1 && stroka <= SHIRINA - 2 && stolb >= 1 && stolb <= DLINA - 2)
-	{
-		if (shipsGrid[stroka][stolb] == 'K')
-		{
+	if (stroka >= 1 && stroka <= SHIRINA - 2 && stolb >= 1 && stolb <= DLINA - 2){
+		if (shipsGrid[stroka][stolb] == 'K'){
 			nomber = 'X';
 			printf("Попадание!\n");
 		}
@@ -96,7 +94,20 @@ int main()
 	shipsGrid[2][5] = 'K';
 	shipsGrid[5][5] = 'K';
 	shipsGrid[5][6] = 'K';
+	shipsGrid[5][7] = 'K';
 	shipsGrid[7][3] = 'K';
+	shipsGrid[8][3] = 'K';
+	shipsGrid[1][9] = 'K';
+	shipsGrid[7][5] = 'K';
+	shipsGrid[9][7] = 'K';
+	shipsGrid[3][9] = 'K';
+	shipsGrid[8][10] = 'K';
+	shipsGrid[7][10] = 'K';
+	shipsGrid[5][1] = 'K';
+	shipsGrid[5][2] = 'K';
+	shipsGrid[8][1] = 'K';
+	shipsGrid[9][1] = 'K';
+	shipsGrid[7][1] = 'K';
 
 	printf("Поле попаданий:\n");
 	printGrid(hitsGrid);
