@@ -4,23 +4,26 @@
 #include <windows.h>
 
 
-const int DLINA = 10;
-const int SHIRINA = 10;
+const int DLINA = 12;
+const int SHIRINA = 12;
 
-void printGrid(char grid[DLINA][SHIRINA])
-{
+void printGrid(char massiv[DLINA][SHIRINA]) {
+	printf("    А Б В Г Д Е Ж З И К \n");
+
 	for (int i = 0; i < DLINA; i++)
 	{
+		printf(" %d | ", i);
+
 		for (int j = 0; j < SHIRINA; j++)
 		{
-			printf("%c ", grid[i][j]);
+			printf("%c ", massiv[i][j]);
 		}
 		printf("\n");
 	}
 	printf("\n");
 }
 
-void gazan(char grid[DLINA][SHIRINA])
+void initGrid(char massiv[DLINA][SHIRINA])
 {
 	for (int i = 0; i < DLINA; i++)
 	{
@@ -28,10 +31,10 @@ void gazan(char grid[DLINA][SHIRINA])
 		{
 			if (i == 0 || i == DLINA - 1 || j == 0 || j == SHIRINA - 1)
 			{
-				grid[i][j] = '#';
+				massiv[i][j] = '#';
 			}
 			else {
-				grid[i][j] = '.';
+				massiv[i][j] = '.';
 			}
 		}
 	}
@@ -41,7 +44,7 @@ bool input(char hitsGrid[DLINA][SHIRINA], char shipsGrid[DLINA][SHIRINA])
 {
 	int stroka, stolb;
 	char nomber;
-	printf("Введите строку и столбец или 0 для выхода): ");
+	printf("Введите строку и столбец для выхода: ");
 	scanf("%d", &stroka);
 	if (stroka == 0)
 	{
@@ -49,9 +52,9 @@ bool input(char hitsGrid[DLINA][SHIRINA], char shipsGrid[DLINA][SHIRINA])
 
 	}
 	scanf("%d", &stolb);
-	if (stroka >= 2 && stroka <= SHIRINA - 1 && stolb >= 2 && stolb <= DLINA - 1)
+	if (stroka >= 1 && stroka <= SHIRINA - 2 && stolb >= 1 && stolb <= DLINA - 2)
 	{
-		if (shipsGrid[stroka - 1][stolb - 1] == 'K')
+		if (shipsGrid[stroka][stolb] == 'K')
 		{
 			nomber = 'X';
 			printf("Попадание!\n");
@@ -60,7 +63,7 @@ bool input(char hitsGrid[DLINA][SHIRINA], char shipsGrid[DLINA][SHIRINA])
 			nomber = 'O';
 			printf("Промах!\n");
 		}
-		hitsGrid[stroka - 1][stolb - 1] = nomber;
+		hitsGrid[stroka][stolb] = nomber;
 		return true;
 	}
 	else {
@@ -78,8 +81,8 @@ int main()
 	char hitsGrid[DLINA][SHIRINA];
 	char shipsGrid[DLINA][SHIRINA];
 
-	gazan(hitsGrid);
-	gazan(shipsGrid);
+	initGrid(hitsGrid);
+	initGrid(shipsGrid);
 
 
 	shipsGrid[2][2] = 'K';
