@@ -1,6 +1,7 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
 #include <cstdio>
 #include <clocale>
+#include <cstring>
 #include <windows.h>
 
 
@@ -48,7 +49,7 @@ void initGrid(char grid[DLINA][SHIRINA])
 bool input(char hitsGrid[DLINA][SHIRINA], char shipsGrid[DLINA][SHIRINA])
 {
     int stroka;
-    char stolbStr[10]; 
+    char stolbStr[10];
     int stolb = 0;
     char nomber;
 
@@ -61,43 +62,43 @@ bool input(char hitsGrid[DLINA][SHIRINA], char shipsGrid[DLINA][SHIRINA])
 
     scanf("%9s", stolbStr);
     if (strcmp(stolbStr, "А") == 0) {
-        stolb = 1;
-    }
-    else if (strcmp(stolbStr, "Б") == 0) {
         stolb = 2;
     }
-    else if (strcmp(stolbStr, "В") == 0) {
+    else if (strcmp(stolbStr, "Б") == 0) {
         stolb = 3;
     }
-    else if (strcmp(stolbStr, "Г") == 0) {
+    else if (strcmp(stolbStr, "В") == 0) {
         stolb = 4;
     }
-    else if (strcmp(stolbStr, "Д") == 0) {
+    else if (strcmp(stolbStr, "Г") == 0) {
         stolb = 5;
     }
-    else if (strcmp(stolbStr, "Е") == 0) {
+    else if (strcmp(stolbStr, "Д") == 0) {
         stolb = 6;
     }
-    else if (strcmp(stolbStr, "Ё") == 0) {
+    else if (strcmp(stolbStr, "Е") == 0) {
         stolb = 7;
     }
-    else if (strcmp(stolbStr, "Ж") == 0) {
+    else if (strcmp(stolbStr, "Ё") == 0) {
         stolb = 8;
     }
-    else if (strcmp(stolbStr, "З") == 0) {
+    else if (strcmp(stolbStr, "Ж") == 0) {
         stolb = 9;
     }
-    else if (strcmp(stolbStr, "И") == 0) {
+    else if (strcmp(stolbStr, "З") == 0) {
         stolb = 10;
+    }
+    else if (strcmp(stolbStr, "И") == 0) {
+        stolb = 11;
     }
     else {
         printf("Такой буквы нет в диапазоне от А до И!\n");
-        return true; 
+        return true;
     }
 
-    if (stroka >= 1 && stroka <= DLINA && stolb >= 1 && stolb <= SHIRINA)
+    if (stroka >= 2 && stroka <= 10 && stolb >= 2 && stolb <= 11)
     {
-        if (shipsGrid[stroka - 1][stolb - 1] == 'K')
+        if (shipsGrid[stroka ][stolb - 1] == 'K')
         {
             nomber = 'X';
             printf("Попадание!\n");
@@ -106,13 +107,14 @@ bool input(char hitsGrid[DLINA][SHIRINA], char shipsGrid[DLINA][SHIRINA])
             nomber = 'O';
             printf("Промах!\n");
         }
-        hitsGrid[stroka - 1][stolb - 1] = nomber;
+        hitsGrid[stroka ][stolb - 1] = nomber;
         return true;
     }
     else {
         printf("Неверные координаты!\n");
         return true;
     }
+}
 int main()
 {
 	setlocale(LC_ALL, "Russian");
@@ -132,6 +134,7 @@ int main()
 	shipsGrid[4][5] = 'K';
 	shipsGrid[5][5] = 'K';
 	shipsGrid[7][7] = 'K';
+    shipsGrid[10][10] = 'K';
 
 	printf("Поле попаданий:\n");
 	printGrid(hitsGrid);
