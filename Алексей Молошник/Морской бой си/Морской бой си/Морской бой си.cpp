@@ -134,6 +134,7 @@ int main()
 	shipsGrid[4][5] = 'K';
 	shipsGrid[5][5] = 'K';
 	shipsGrid[7][7] = 'K';
+    shipsGrid[3][2] = 'K';
     shipsGrid[10][10] = 'K';
 
 	printf("Поле попаданий:\n");
