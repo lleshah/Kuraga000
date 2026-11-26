@@ -5,8 +5,27 @@
 #include <time.h>
 #include <ctype.h>
 #include <locale.h>
+#include <windows.h>
 
 const int N = 12;
+const char* COLS = "АБВГДЕЖЗИК";
+
+
+int getColIndex(unsigned char ch) {
+
+    if (ch >= 224 && ch <= 255) { 
+        ch -= 32;
+    } else if (ch == 184) { 
+        ch = 197;
+    }
+
+    for (int i = 0; i < 10; i++) {
+        if ((unsigned char)COLS[i] == ch) {
+            return i + 1;
+        }
+    }
+    return -1;
+}
 
 void initBoard(char b[12][12]) {
     for (int i = 0; i < N; i++)
@@ -91,7 +110,7 @@ void printBoards(char p1[12][12], char p2[12][12], bool showEnemy) {
     countShips(p1, s1);
     countShips(p2, s2);
     printf("\n       ВАШЕ ПОЛЕ                  %s\n", showEnemy ? "ПОЛЕ ПРОТИВНИКА" : "ВАШИ ВЫСТРЕЛЫ");
-    printf("    A B C D E F G H I J        A B C D E F G H I J\n");
+    printf("    А Б В Г Д Е Ж З И К        А Б В Г Д Е Ж З И К\n");
     printf("  +---------------------+    +---------------------+\n");
     for (int i = 1; i <= 10; i++) {
         printf("%2d| ", i);
@@ -138,12 +157,12 @@ void botShoot(char player[12][12]) {
         int r = rand() % 10 + 1, c = rand() % 10 + 1;
         if (player[r][c] == '.' || player[r][c] == '#') {
             if (player[r][c] == '#') {
-                printf("Враг выстрелил в %c%d и ПОПАЛ!\n", 'A' + c - 1, r);
+                printf("Враг выстрелил в %c%d и ПОПАЛ!\n", COLS[c - 1], r);
                 player[r][c] = 'X';
                 markSunk(player, r, c);
             }
             else {
-                printf("Враг выстрелил в %c%d и промахнулся.\n", 'A' + c - 1, r);
+                printf("Враг выстрелил в %c%d и промахнулся.\n", COLS[c - 1], r);
                 player[r][c] = '0';
             }
             break;
@@ -152,6 +171,8 @@ void botShoot(char player[12][12]) {
 }
 
 int main() {
+    SetConsoleCP(1251);
+    SetConsoleOutputCP(1251);
     setlocale(LC_ALL, "Russian");
     srand((unsigned int)time(NULL));
 
@@ -166,11 +187,11 @@ int main() {
 
     for (int i = 0; i < count; i++) {
         int len, row, horiz;
-        char colCh;
-        printf("\nКорабль %d (длина 1-4, координата A1..J10, ориентация 1-гор/0-верт): ", i + 1);
+        unsigned char colCh;
+        printf("\nКорабль %d (длина 1-4, координата А1..К10, ориентация 1-гор/0-верт): ", i + 1);
         scanf("%d %c%d %d", &len, &colCh, &row, &horiz);
-        int col = toupper(colCh) - 'A' + 1;
-        if (len >= 1 && len <= 4 && canPlace(player, row, col, len, horiz)) {
+        int col = getColIndex(colCh);
+        if (len >= 1 && len <= 4 && col != -1 && canPlace(player, row, col, len, horiz)) {
             placeShip(player, row, col, len, horiz);
         }
         else {
@@ -182,16 +203,16 @@ int main() {
     bool earlyExit = false;
     while (countChar(player, '#') > 0 && countChar(enemy, '#') > 0) {
         printBoards(player, enemy, false);
-        char colCh;
+        unsigned char colCh;
         int row;
-        printf("\nВаш выстрел (например A5, или Q для выхода): ");
+        printf("\nВаш выстрел (например А5, или Х для выхода): ");
         scanf(" %c", &colCh);
-        if (toupper(colCh) == 'Q') {
+        if (colCh == (unsigned char)'Х' || colCh == (unsigned char)'х') {
             earlyExit = true;
             break;
         }
         scanf("%d", &row);
-        int col = toupper(colCh) - 'A' + 1;
+        int col = getColIndex(colCh);
         if (shoot(enemy, row, col) && countChar(enemy, '#') > 0) {
             botShoot(player);
         }
