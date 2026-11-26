@@ -45,33 +45,39 @@ void initGrid(char massiv[DLINA][SHIRINA])
 	}
 }
 
-bool input(char hitsGrid[DLINA][SHIRINA], char shipsGrid[DLINA][SHIRINA])
-{
-	int stroka, stolb;
-	char nomber;
-	printf("Введите строку и столбец для выхода: ");
-	scanf("%d", &stroka);
-	if (stroka == 0)
-	{
-		return false;
+bool input(char hitsGrid[DLINA][SHIRINA], char shipsGrid[DLINA][SHIRINA]) {
+	int stroka = -1;
+	char stolb_char;
+	int stolb = -1;
 
-	}
-	scanf("%d", &stolb);
-	if (stroka >= 1 && stroka <= SHIRINA - 2 && stolb >= 1 && stolb <= DLINA - 2){
-		if (shipsGrid[stroka][stolb] == 'K'){
-			nomber = 'X';
-			printf("Попадание!\n");
-		}
-		else {
-			nomber = 'O';
-			printf("Промах!\n");
-		}
-		hitsGrid[stroka][stolb] = nomber;
+	printf("Введите координаты (например, 2А или 5Б), для выхода введите 0: ");
+	int res = scanf("%d%c", &stroka, &stolb_char);
+
+	if (stroka == 0)
+		return false;
+}
+		if (res != 2) {
+		printf("Неверный формат! Пишите число и букву вместе, например: 2А\n");
+		while (getchar() != '\n');
 		return true;
 	}
-	else {
-		printf("Неправильно ввёл числа!\n");
-		return true;
+		if (stolb_char >= 'а' && stolb_char <= 'я') {
+			stolb_char = stolb_char - 'а' + 'А';
+		}
+		if (stolb_char >= 'А' && stolb_char <= 'К') {
+			stolb = stolb_char - 'А' + 1;
+		}
+			if (shipsGrid[stroka][stolb] == 'K') {
+				hitsGrid[stroka][stolb] = 'X';
+				printf("Попадание!\n");
+			}
+			else {
+				hitsGrid[stroka][stolb] = 'O';
+				printf("Промах!\n");
+			} return true;  
+		} else {
+			printf("Неправильно ввёл координаты! Попробуйте еще одну попытку.\n");
+			return true;
 	}
 }
 
