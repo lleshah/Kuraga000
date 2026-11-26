@@ -10,15 +10,13 @@
 const int N = 12;
 const char* COLS = "АБВГДЕЖЗИК";
 
-
 int getColIndex(unsigned char ch) {
-
-    if (ch >= 224 && ch <= 255) { 
+    if (ch >= 224 && ch <= 255) {
         ch -= 32;
-    } else if (ch == 184) { 
+    }
+    else if (ch == 184) {
         ch = 197;
     }
-
     for (int i = 0; i < 10; i++) {
         if ((unsigned char)COLS[i] == ch) {
             return i + 1;
@@ -49,12 +47,18 @@ void placeShip(char b[12][12], int r, int c, int len, int horiz) {
         b[r + (horiz ? 0 : i)][c + (horiz ? i : 0)] = '#';
 }
 
-void autoPlace(char b[12][12], int count) {
-    for (int placed = 0; placed < count; ) {
-        int len = rand() % 4 + 1, r = rand() % 10 + 1, c = rand() % 10 + 1, h = rand() % 2;
-        if (canPlace(b, r, c, len, h)) {
-            placeShip(b, r, c, len, h);
-            placed++;
+void autoPlace(char b[12][12]) {
+    int fleet[5] = { 0, 4, 3, 2, 1 };
+    for (int len = 4; len >= 1; len--) {
+        int placed = 0;
+        while (placed < fleet[len]) {
+            int r = rand() % 10 + 1;
+            int c = rand() % 10 + 1;
+            int h = rand() % 2;
+            if (canPlace(b, r, c, len, h)) {
+                placeShip(b, r, c, len, h);
+                placed++;
+            }
         }
     }
 }
@@ -87,11 +91,9 @@ void markSunk(char real[12][12], int r, int c) {
     while (real[r2 + 1][c] == '#' || real[r2 + 1][c] == 'X') r2++;
     while (real[r][c1 - 1] == '#' || real[r][c1 - 1] == 'X') c1--;
     while (real[r][c2 + 1] == '#' || real[r][c2 + 1] == 'X') c2++;
-
     for (int i = r1; i <= r2; i++)
         for (int j = c1; j <= c2; j++)
             if (real[i][j] == '#') return;
-
     for (int i = r1; i <= r2; i++) {
         for (int j = c1; j <= c2; j++) {
             for (int dr = -1; dr <= 1; dr++) {
@@ -109,20 +111,20 @@ void printBoards(char p1[12][12], char p2[12][12], bool showEnemy) {
     int s1[5], s2[5];
     countShips(p1, s1);
     countShips(p2, s2);
-    printf("\n       ВАШЕ ПОЛЕ                  %s\n", showEnemy ? "ПОЛЕ ПРОТИВНИКА" : "ВАШИ ВЫСТРЕЛЫ");
-    printf("    А Б В Г Д Е Ж З И К        А Б В Г Д Е Ж З И К\n");
-    printf("  +---------------------+    +---------------------+\n");
+    printf("\n          ВАШЕ ПОЛЕ                         %s\n", showEnemy ? "ПОЛЕ ПРОТИВНИКА" : "ВАШИ ВЫСТРЕЛЫ");
+    printf("   А Б В Г Д Е Ж З И К               А Б В Г Д Е Ж З И К\n");
+    printf("  +---------------------+           +---------------------+\n");
     for (int i = 1; i <= 10; i++) {
         printf("%2d| ", i);
         for (int j = 1; j <= 10; j++) printf("%c ", p1[i][j]);
-        printf("|  %2d| ", i);
+        printf("|         %2d| ", i);
         for (int j = 1; j <= 10; j++) {
             char ch = (!showEnemy && p2[i][j] == '#') ? '.' : p2[i][j];
             printf("%c ", ch);
         }
         printf("|\n");
     }
-    printf("  +---------------------+    +---------------------+\n");
+    printf("  +---------------------+           +---------------------+\n");
     printf("Ваши корабли: [1]:%d [2]:%d [3]:%d [4]:%d\n", s1[1], s1[2], s1[3], s1[4]);
     printf("Корабли врага:[1]:%d [2]:%d [3]:%d [4]:%d\n", s2[1], s2[2], s2[3], s2[4]);
 }
@@ -180,23 +182,37 @@ int main() {
     initBoard(player);
     initBoard(enemy);
 
-    int count;
-    printf("Сколько кораблей добавить: ");
-    scanf("%d", &count);
-    autoPlace(enemy, count);
+    autoPlace(enemy);
 
-    for (int i = 0; i < count; i++) {
-        int len, row, horiz;
-        unsigned char colCh;
-        printf("\nКорабль %d (длина 1-4, координата А1..К10, ориентация 1-гор/0-верт): ", i + 1);
-        scanf("%d %c%d %d", &len, &colCh, &row, &horiz);
-        int col = getColIndex(colCh);
-        if (len >= 1 && len <= 4 && col != -1 && canPlace(player, row, col, len, horiz)) {
-            placeShip(player, row, col, len, horiz);
-        }
-        else {
-            printf("Ошибка установки! Попробуйте снова.\n");
-            i--;
+    int choice;
+    printf("Расстановка вашего флота (1x4, 2x3, 3x2, 4x1):\n");
+    printf("1 - Расставить автоматически (рандом)\n");
+    printf("2 - Расставить вручную\n");
+    printf("Ваш выбор: ");
+    scanf("%d", &choice);
+
+    if (choice == 1) {
+        autoPlace(player);
+    }
+    else {
+        int fleetLeft[5] = { 0, 4, 3, 2, 1 };
+        int totalShips = 10;
+        for (int i = 0; i < totalShips; i++) {
+            int len, row, horiz;
+            unsigned char colCh;
+            printf("\nОсталось расставить: [1]:%d [2]:%d [3]:%d [4]:%d\n", fleetLeft[1], fleetLeft[2], fleetLeft[3], fleetLeft[4]);
+            printf("Корабль %d/10 (длина 1-4, координата А1..К10, ориентация 1-гор/0-верт): ", i + 1);
+            scanf("%d %c%d %d", &len, &colCh, &row, &horiz);
+
+            int col = getColIndex(colCh);
+            if (len >= 1 && len <= 4 && fleetLeft[len] > 0 && col != -1 && canPlace(player, row, col, len, horiz)) {
+                placeShip(player, row, col, len, horiz);
+                fleetLeft[len]--;
+            }
+            else {
+                printf("Ошибка установки! Проверьте лимит кораблей, границы или отступ в 1 клетку.\n");
+                i--;
+            }
         }
     }
 
@@ -222,6 +238,7 @@ int main() {
     if (earlyExit) printf("Игра завершена досрочно.\n");
     else if (countChar(enemy, '#') == 0) printf("ПОБЕДИТЕЛЬ: ИГРОК!\n");
     else printf("ПОБЕДИТЕЛЬ: КОМПЬЮТЕР!\n");
+
     printf("Ваши попадания: %d | Попадания врага: %d\n", countChar(enemy, 'X'), countChar(player, 'X'));
     printBoards(player, enemy, true);
 
