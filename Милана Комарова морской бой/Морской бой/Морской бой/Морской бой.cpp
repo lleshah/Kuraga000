@@ -13,7 +13,7 @@ void printGrid(char massiv[DLINA][SHIRINA]) {
 	for (int i = 0; i < DLINA; i++)
 	{
 		if (i == 0 || i == DLINA - 1) {
-			printf("    | ");
+			printf("    * ");
 		}
 		else {
 			printf(" %2d | ", i);
@@ -84,8 +84,13 @@ bool input(char hitsGrid[DLINA][SHIRINA], char shipsGrid[DLINA][SHIRINA]) {
 		}
 	}
 
-	while (getchar() != '\n'); 
-	printf("\n");
+	while (getchar() != '\n');
+
+	system("cls");
+	printf("Поле попаданий:\n");
+	printGrid(hitsGrid);
+	printf("Поле наших кораблей:\n");
+	printGrid(shipsGrid);
 
 	int vr_stroka = -1;
 	char vr_stolb_char;
@@ -106,19 +111,15 @@ bool input(char hitsGrid[DLINA][SHIRINA], char shipsGrid[DLINA][SHIRINA]) {
 		else if (vr_stolb_char == 'К') vr_stolb = 10;
 
 		if (vr_stroka >= 1 && vr_stroka <= 10 && vr_stolb != -1) {
-			while (getchar() != '\n');
-			char otvet;
-			printf("Соперник попал по тебе? Введи 'п' (попал) или 'м' (мимо): ");
-			scanf("%c", &otvet);
-
-			if (otvet == 'п' || otvet == 'П') {
+			if (shipsGrid[vr_stroka][vr_stolb] == 'K') {
 				shipsGrid[vr_stroka][vr_stolb] = 'X';
-				printf("Попадание соперника отмечено на твоем поле кораблей!\n");
+				printf("Соперник попал по твоему кораблю!\n");
 			}
-			else { if (shipsGrid[vr_stroka][vr_stolb] != 'K') {
+			else {
+				if (shipsGrid[vr_stroka][vr_stolb] != 'X') {
 					shipsGrid[vr_stroka][vr_stolb] = 'O';
 				}
-				printf("Промах соперника отмечен на твоем поле кораблей!\n");
+				printf("Соперник промахнулся!\n");
 			}
 		}
 		else {
