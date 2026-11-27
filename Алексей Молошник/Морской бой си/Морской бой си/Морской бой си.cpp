@@ -9,7 +9,7 @@ const int SHIRINA = 12;
 
 void printGrid(char grid[DLINA][SHIRINA])
 {
-    printf("    # А Б В Г Д Е Ж З И К #\n");
+    printf("  | # А Б В Г Д Е Ж З И К \n");
 
     for (int i = 0; i < DLINA; i++)
     {
@@ -108,21 +108,6 @@ int getColumn(char stolbStr[])
     }
 }
 
-bool checkAround(char shipsGrid[DLINA][SHIRINA], int stroka, int stolb)
-{
-    for (int i = stroka - 1; i <= stroka + 1; i++)
-    {
-        for (int j = stolb - 1; j <= stolb + 1; j++)
-        {
-            if (shipsGrid[i][j] == 'П')
-            {
-                return false;
-            }
-        }
-    }
-
-    return true;
-}
 void enterDeck(char shipsGrid[DLINA][SHIRINA])
 {
     int stroka;
@@ -136,13 +121,9 @@ void enterDeck(char shipsGrid[DLINA][SHIRINA])
 
         stolb = getColumn(stolbStr);
 
-        if (stroka >= 1 && stroka <= 10 &&
-            stolb >= 1 && stolb <= 10 &&
-            shipsGrid[stroka][stolb] == '.' &&
-            checkAround(shipsGrid, stroka, stolb))
+        if (stroka >= 1 && stroka <= 10 && stolb >= 1 && stolb <= 10 && shipsGrid[stroka][stolb] == '.')
         {
             shipsGrid[stroka][stolb] = 'П';
-
             printf("\nПоле после ввода палубы:\n");
             printGrid(shipsGrid);
 
@@ -233,6 +214,96 @@ bool input(char hitsGrid[DLINA][SHIRINA], char shipsGrid[DLINA][SHIRINA])
     }
 }
 
+void enemyInput(char enemyGrid[DLINA][SHIRINA])
+{
+    int stroka;
+    int stolb;
+    char stolbStr[10];
+    char answer;
+
+    printf("\nПОЛЕ ПРОТИВНИКА\n");
+    printf("Введите координаты выстрела или 0 для выхода: ");
+
+    scanf("%d", &stroka);
+
+    if (stroka == 0)
+        return;
+
+    scanf("%9s", stolbStr);
+
+    stolb = getColumn(stolbStr);
+
+    if (stroka < 1 || stroka > 10 ||
+        stolb < 1 || stolb > 10)
+    {
+        printf("Неверные координаты!\n");
+        return;
+    }
+
+    if (enemyGrid[stroka][stolb] == 'X' ||
+        enemyGrid[stroka][stolb] == 'O')
+    {
+        printf("В эту клетку уже стреляли!\n");
+        return;
+    }
+
+    printf("Попал ли ты в корабль? (Д/Н): ");
+    scanf(" %9s", stolbStr);
+
+    if (strcmp(stolbStr, "Д") == 0 ||
+        strcmp(stolbStr, "д") == 0)
+    {
+        enemyGrid[stroka][stolb] = 'X';
+        printf("Попадание!\n");
+    }
+    else
+    {
+        enemyGrid[stroka][stolb] = 'O';
+        printf("Промах!\n");
+    }
+}
+
+void myInput(char myGrid[DLINA][SHIRINA])
+{
+    int stroka;
+    int stolb;
+    char stolbStr[10];
+    char answer[10];
+
+    printf("\nПопали ли по твоему кораблю? (Д/Н): ");
+    scanf("%9s", answer);
+
+    printf("Введите координаты: ");
+    scanf("%d %9s", &stroka, stolbStr);
+
+    stolb = getColumn(stolbStr);
+
+    if (stroka >= 1 && stroka <= 10 &&
+        stolb >= 1 && stolb <= 10)
+    {
+        if (myGrid[stroka][stolb] == 'X' ||
+            myGrid[stroka][stolb] == 'O')
+        {
+            printf("В эту клетку уже записан результат!\n");
+            return;
+        }
+
+        if (strcmp(answer, "Д") == 0 ||
+            strcmp(answer, "д") == 0)
+        {
+            myGrid[stroka][stolb] = 'X';
+        }
+        else
+        {
+            myGrid[stroka][stolb] = 'O';
+        }
+    }
+    else
+    {
+        printf("Неверные координаты!\n");
+    }
+}
+
 int main()
 {
     setlocale(LC_ALL, "Russian");
@@ -263,14 +334,18 @@ int main()
     printf("Поле наших кораблей:\n");
     printGrid(shipsGrid);
 
-    while (input(hitsGrid, shipsGrid))
-    {
-        printf("\nПоле попаданий:\n");
+    while (true){
+        enemyInput(hitsGrid);
+
+        printf("\nПоле противника:\n");
         printGrid(hitsGrid);
 
-        printf("Поле наших кораблей:\n");
-        printGrid(shipsGrid);
-    }
+        myInput(shipsGrid);
 
+        printf("\nПоле попаданий по твоим кораблям:\n");
+        printGrid(shipsGrid);
+
+        printf("\nПродолжаем игру!\n");
+    }
     return 0;
 }
