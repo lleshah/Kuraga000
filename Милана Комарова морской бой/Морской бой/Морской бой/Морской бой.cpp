@@ -50,7 +50,7 @@ bool input(char hitsGrid[DLINA][SHIRINA], char shipsGrid[DLINA][SHIRINA]) {
 	char stolb_char;
 	int stolb = -1;
 
-	printf("Введите координаты (например, 2А или 5Б), для выхода введите 0: ");
+	printf("Введите координаты корабля: ");
 	int res = scanf("%d%c", &stroka, &stolb_char);
 
 	if (stroka == 0)
@@ -58,7 +58,7 @@ bool input(char hitsGrid[DLINA][SHIRINA], char shipsGrid[DLINA][SHIRINA]) {
 		return false;
 
 		if (res != 2) {
-		printf("Неверный формат! Пишите число и букву вместе, например: 2А\n");
+		printf("Неверный формат! Попробуйте еще раз!\n");
 		while (getchar() != '\n');
 		return true;
 	}
@@ -81,7 +81,7 @@ bool input(char hitsGrid[DLINA][SHIRINA], char shipsGrid[DLINA][SHIRINA]) {
 			}
 		}
 		else {
-			printf("Неправильно ввёл координаты! Попробуйте еще одну попытку.\n");
+			printf("Неправильно ввёл координаты! Попробуйте еще раз.\n");
 		}
 
 		return true;
@@ -108,7 +108,7 @@ int main()
 	shipsGrid[5][7] = 'K';
 	shipsGrid[7][3] = 'K';
 	shipsGrid[8][3] = 'K';
-	shipsGrid[1][9] = 'K';
+	shipsGrid[1][8] = 'K';
 	shipsGrid[7][5] = 'K';
 	shipsGrid[9][7] = 'K';
 	shipsGrid[3][9] = 'K';
