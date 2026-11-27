@@ -212,56 +212,51 @@ bool input(char hitsGrid[DLINA][SHIRINA], char shipsGrid[DLINA][SHIRINA])
     }
 }
 
-void enemyInput(char enemyGrid[DLINA][SHIRINA])
+bool enemyInput(char enemyGrid[DLINA][SHIRINA])
 {
     int stroka;
     int stolb;
     char stolbStr[10];
-    char answer;
 
     printf("\nПОЛЕ ПРОТИВНИКА\n");
     printf("Введите координаты выстрела или 0 для выхода: ");
 
     scanf("%d", &stroka);
-
     if (stroka == 0)
-        return;
+        return false;
 
     scanf("%9s", stolbStr);
-
     stolb = getColumn(stolbStr);
-
-    if (stroka < 1 || stroka > 10 ||
-        stolb < 1 || stolb > 10)
+    if (stroka < 1 || stroka > 10 || stolb < 1 || stolb > 10)
     {
         printf("Неверные координаты!\n");
-        return;
+        return false;
     }
 
-    if (enemyGrid[stroka][stolb] == 'X' ||
-        enemyGrid[stroka][stolb] == 'O')
+    if (enemyGrid[stroka][stolb] == 'X' || enemyGrid[stroka][stolb] == 'O')
     {
         printf("В эту клетку уже стреляли!\n");
-        return;
+        return false;
     }
 
     printf("Попал ли ты в корабль? (Д/Н): ");
-    scanf(" %9s", stolbStr);
+    scanf("%9s", stolbStr);
 
-    if (strcmp(stolbStr, "Д") == 0 ||
-        strcmp(stolbStr, "д") == 0)
+    if (strcmp(stolbStr, "Д") == 0 || strcmp(stolbStr, "д") == 0)
     {
         enemyGrid[stroka][stolb] = 'X';
         printf("Попадание!\n");
+        return true;
     }
     else
     {
         enemyGrid[stroka][stolb] = 'O';
         printf("Промах!\n");
+        return false;
     }
 }
 
-void myInput(char myGrid[DLINA][SHIRINA])
+bool myInput(char myGrid[DLINA][SHIRINA])
 {
     int stroka;
     int stolb;
@@ -269,29 +264,32 @@ void myInput(char myGrid[DLINA][SHIRINA])
 
     printf("\nВведите координаты выстрела противника: ");
     scanf("%d %9s", &stroka, stolbStr);
+
     stolb = getColumn(stolbStr);
+
     if (stroka >= 1 && stroka <= 10 && stolb >= 1 && stolb <= 10)
     {
-        if (myGrid[stroka][stolb] == 'X' || myGrid[stroka][stolb] == 'O')
-        {
+        if (myGrid[stroka][stolb] == 'X' || myGrid[stroka][stolb] == 'O'){
             printf("В эту клетку уже стреляли!\n");
-            return;
+            return false;
         }
 
-        if (myGrid[stroka][stolb] == 'П')
-        {
+        if (myGrid[stroka][stolb] == 'П'){
             myGrid[stroka][stolb] = 'X';
-            printf("Противник попал в твой корабль!\n");
+            printf("Противник попал в твой корабль! Его ход продолжается!\n");
+            return true;
         }
         else
         {
             myGrid[stroka][stolb] = 'O';
-            printf("Противник промахнулся!\n");
+            printf("Противник промахнулся! Теперь твой ход!\n");
+            return false;
         }
     }
     else
     {
         printf("Неверные координаты!\n");
+        return false;
     }
 }
 
@@ -325,18 +323,26 @@ int main()
     printf("Поле наших кораблей:\n");
     printGrid(shipsGrid);
 
-    while (true){
-        enemyInput(hitsGrid);
-
+    while (true)
+    {
+        bool hit = enemyInput(hitsGrid);
         printf("\nПоле противника:\n");
         printGrid(hitsGrid);
 
-        myInput(shipsGrid);
+        if (hit)
+        {
+            continue;
+        }
 
+        bool enemyHit = myInput(shipsGrid);
         printf("\nПоле попаданий по твоим кораблям:\n");
         printGrid(shipsGrid);
 
-        printf("\nПродолжаем игру!\n");
+        if (enemyHit)
+        {
+            continue;
+        }
+        printf("\nПродолжаем!\n");
     }
     return 0;
 }
