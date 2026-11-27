@@ -325,23 +325,25 @@ int main()
 
     while (true)
     {
-        bool hit = enemyInput(hitsGrid);
-        printf("\nПоле противника:\n");
-        printGrid(hitsGrid);
-
-        if (hit)
+        bool hit;
+        do
         {
-            continue;
-        }
+            hit = enemyInput(hitsGrid);
+            printf("\nПоле противника:\n");
+            printGrid(hitsGrid);
 
-        bool enemyHit = myInput(shipsGrid);
-        printf("\nПоле попаданий по твоим кораблям:\n");
-        printGrid(shipsGrid);
+        } while (hit);
 
-        if (enemyHit)
+        bool enemyHit;
+
+        do
         {
-            continue;
-        }
+            enemyHit = myInput(shipsGrid);
+
+            printf("\nПоле попаданий по твоим кораблям:\n");
+            printGrid(shipsGrid);
+
+        } while (enemyHit);
         printf("\nПродолжаем!\n");
     }
     return 0;
