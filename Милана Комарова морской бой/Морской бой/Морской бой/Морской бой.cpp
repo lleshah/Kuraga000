@@ -54,8 +54,9 @@ bool input(char hitsGrid[DLINA][SHIRINA], char shipsGrid[DLINA][SHIRINA]) {
 	int res = scanf("%d%c", &stroka, &stolb_char);
 
 	if (stroka == 0)
+
 		return false;
-}
+
 		if (res != 2) {
 		printf("Неверный формат! Пишите число и букву вместе, например: 2А\n");
 		while (getchar() != '\n');
@@ -64,9 +65,12 @@ bool input(char hitsGrid[DLINA][SHIRINA], char shipsGrid[DLINA][SHIRINA]) {
 		if (stolb_char >= 'а' && stolb_char <= 'я') {
 			stolb_char = stolb_char - 'а' + 'А';
 		}
-		if (stolb_char >= 'А' && stolb_char <= 'К') {
+		if (stolb_char >= 'А' && stolb_char <= 'И') {
 			stolb = stolb_char - 'А' + 1;
+		} else if (stolb_char == 'К') {
+			stolb = 10;
 		}
+		if (stroka >= 1 && stroka <= 10 && stolb != -1) {
 			if (shipsGrid[stroka][stolb] == 'K') {
 				hitsGrid[stroka][stolb] = 'X';
 				printf("Попадание!\n");
@@ -74,13 +78,14 @@ bool input(char hitsGrid[DLINA][SHIRINA], char shipsGrid[DLINA][SHIRINA]) {
 			else {
 				hitsGrid[stroka][stolb] = 'O';
 				printf("Промах!\n");
-			} return true;  
-		} else {
+			}
+		}
+		else {
 			printf("Неправильно ввёл координаты! Попробуйте еще одну попытку.\n");
-			return true;
-	}
-}
+		}
 
+		return true;
+}
 int main()
 {
 	setlocale(LC_ALL, "Russian");
