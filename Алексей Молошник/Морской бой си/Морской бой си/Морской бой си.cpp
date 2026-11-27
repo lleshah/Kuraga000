@@ -177,7 +177,6 @@ bool input(char hitsGrid[DLINA][SHIRINA], char shipsGrid[DLINA][SHIRINA])
     {
         return false;
     }
-
     scanf("%9s", stolbStr);
 
     stolb = getColumn(stolbStr);
@@ -185,8 +184,7 @@ bool input(char hitsGrid[DLINA][SHIRINA], char shipsGrid[DLINA][SHIRINA])
     if (stroka >= 1 && stroka <= 10 &&
         stolb >= 1 && stolb <= 10)
     {
-        if (hitsGrid[stroka][stolb] == 'X' ||
-            hitsGrid[stroka][stolb] == 'O')
+        if (hitsGrid[stroka][stolb] == 'X' || hitsGrid[stroka][stolb] == 'O')
         {
             printf("Вы уже стреляли в эту клетку!\n");
             return true;
@@ -268,34 +266,27 @@ void myInput(char myGrid[DLINA][SHIRINA])
     int stroka;
     int stolb;
     char stolbStr[10];
-    char answer[10];
 
-    printf("\nПопали ли по твоему кораблю? (Д/Н): ");
-    scanf("%9s", answer);
-
-    printf("Введите координаты: ");
+    printf("\nВведите координаты выстрела противника: ");
     scanf("%d %9s", &stroka, stolbStr);
-
     stolb = getColumn(stolbStr);
-
-    if (stroka >= 1 && stroka <= 10 &&
-        stolb >= 1 && stolb <= 10)
+    if (stroka >= 1 && stroka <= 10 && stolb >= 1 && stolb <= 10)
     {
-        if (myGrid[stroka][stolb] == 'X' ||
-            myGrid[stroka][stolb] == 'O')
+        if (myGrid[stroka][stolb] == 'X' || myGrid[stroka][stolb] == 'O')
         {
-            printf("В эту клетку уже записан результат!\n");
+            printf("В эту клетку уже стреляли!\n");
             return;
         }
 
-        if (strcmp(answer, "Д") == 0 ||
-            strcmp(answer, "д") == 0)
+        if (myGrid[stroka][stolb] == 'П')
         {
             myGrid[stroka][stolb] = 'X';
+            printf("Противник попал в твой корабль!\n");
         }
         else
         {
             myGrid[stroka][stolb] = 'O';
+            printf("Противник промахнулся!\n");
         }
     }
     else
