@@ -7,7 +7,7 @@
 const int DLINA = 12;
 const int SHIRINA = 12;
 
-void printGrid(char massiv[DLINA][SHIRINA]) {
+void printGrid(char massiv[DLINA][SHIRINA]) { 
 	printf("        А Б В Г Д Е Ж З И К \n");
 
 	for (int i = 0; i < DLINA; i++)
@@ -45,7 +45,7 @@ void initGrid(char massiv[DLINA][SHIRINA])
 	}
 }
 
-bool input(char hitsGrid[DLINA][SHIRINA], char shipsGrid[DLINA][SHIRINA]) {
+bool input(char hitsGrid[DLINA][SHIRINA], char shipsGrid[DLINA][SHIRINA]) { 
 	int stroka = -1;
 	char stolb_char;
 	int stolb = -1;
