@@ -75,11 +75,11 @@ bool input(char hitsGrid[DLINA][SHIRINA], char shipsGrid[DLINA][SHIRINA]) {
 
 				if (otvet == 'п' || otvet == 'П') {
 					hitsGrid[stroka][stolb] = 'X';
-					printf("Попадание отмечено на поле выстрелов! Стреляй еще раз.\n");
+					printf("Попадание! Стреляй еще раз.\n");
 				}
 				else {
 					hitsGrid[stroka][stolb] = 'O';
-					printf("Промах отмечен на поле выстрелов!\n");
+					printf("Промах! Попробуй повторить попытку позже.\n");
 					my_turn = false;
 				}
 			}
@@ -90,6 +90,9 @@ bool input(char hitsGrid[DLINA][SHIRINA], char shipsGrid[DLINA][SHIRINA]) {
 		}
 
 		while (getchar() != '\n');
+
+		printf("Нажмите Enter, чтобы продолжить игру.");
+		getchar();
 
 		system("cls");
 		printf("Поле попаданий:\n");
@@ -125,6 +128,9 @@ bool input(char hitsGrid[DLINA][SHIRINA], char shipsGrid[DLINA][SHIRINA]) {
 					printf("Соперник попал по твоему кораблю! Он ходит снова.\n");
 
 					while (getchar() != '\n');
+					printf("Нажмите Enter, чтобы продолжить игру.");
+					getchar();
+
 					system("cls");
 					printf("Поле попаданий:\n");
 					printGrid(hitsGrid);
@@ -140,13 +146,15 @@ bool input(char hitsGrid[DLINA][SHIRINA], char shipsGrid[DLINA][SHIRINA]) {
 				}
 			}
 			else {
-				printf("Неправильно ввела координаты врага! Ход пропущен.\n");
+				printf("Неправильно ввела координаты соперника! Ход пропущен.\n");
 				enemy_turn = false;
 			}
 		}
 	}
 
 	while (getchar() != '\n');
+	printf("Нажмите Enter, чтобы продолжить игру.");
+	getchar();
 	return true;
 }
 
@@ -163,26 +171,36 @@ int main()
 	initGrid(shipsGrid);
 
 
+	// 4-палубный
 	shipsGrid[2][2] = 'K';
 	shipsGrid[2][3] = 'K';
 	shipsGrid[2][4] = 'K';
 	shipsGrid[2][5] = 'K';
-	shipsGrid[5][5] = 'K';
-	shipsGrid[5][6] = 'K';
-	shipsGrid[5][7] = 'K';
-	shipsGrid[7][3] = 'K';
-	shipsGrid[8][3] = 'K';
-	shipsGrid[1][8] = 'K';
-	shipsGrid[7][5] = 'K';
-	shipsGrid[9][7] = 'K';
-	shipsGrid[3][9] = 'K';
-	shipsGrid[8][10] = 'K';
-	shipsGrid[7][10] = 'K';
+
+	// 3-палубные
 	shipsGrid[5][1] = 'K';
-	shipsGrid[5][2] = 'K';
-	shipsGrid[8][1] = 'K';
-	shipsGrid[9][1] = 'K';
+	shipsGrid[6][1] = 'K';
 	shipsGrid[7][1] = 'K';
+
+	shipsGrid[9][4] = 'K';
+	shipsGrid[9][5] = 'K';
+	shipsGrid[9][6] = 'K';
+
+	// 2-палубные
+	shipsGrid[4][4] = 'K';
+	shipsGrid[4][5] = 'K';
+
+	shipsGrid[7][8] = 'K';
+	shipsGrid[8][8] = 'K';
+
+	shipsGrid[1][9] = 'K';
+	shipsGrid[1][10] = 'K';
+
+	// 1-палубные
+	shipsGrid[10][1] = 'K';
+	shipsGrid[4][10] = 'K';
+	shipsGrid[7][4] = 'K';
+	shipsGrid[10][10] = 'K';
 
 	printf("Поле попаданий:\n");
 	printGrid(hitsGrid);
