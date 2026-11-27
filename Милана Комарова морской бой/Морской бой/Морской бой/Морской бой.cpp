@@ -46,84 +46,103 @@ void initGrid(char massiv[DLINA][SHIRINA])
 }
 
 bool input(char hitsGrid[DLINA][SHIRINA], char shipsGrid[DLINA][SHIRINA]) {
-	int stroka = -1;
-	char stolb_char;
-	int stolb = -1;
+	bool my_turn = true;
+	while (my_turn) {
+		int stroka = -1;
+		char stolb_char;
+		int stolb = -1;
 
-	printf("Сейчас твой ход! Введите координаты вашего выстрела: ");
-	int res = scanf("%d%c", &stroka, &stolb_char);
+		printf("Сейчас твой ход! Введите координаты вашего выстрела: ");
+		int res = scanf("%d%c", &stroka, &stolb_char);
 
-	if (stroka == 0) return false;
+		if (stroka == 0) return false;
 
-	if (res != 2) {
-		printf("Неверный формат! Ход пропущен, попробуйте в следующий раз.\n");
-		while (getchar() != '\n');
-	}
-	else {
-		if (stolb_char >= 'а' && stolb_char <= 'я') stolb_char = stolb_char - 'а' + 'А';
-		if (stolb_char >= 'А' && stolb_char <= 'И') stolb = stolb_char - 'А' + 1;
-		else if (stolb_char == 'К') stolb = 10;
-
-		if (stroka >= 1 && stroka <= 10 && stolb != -1) {
+		if (res != 2) {
+			printf("Неверный формат! Ход пропущен, попробуйте в следующий раз.\n");
 			while (getchar() != '\n');
-			char otvet;
-			printf("Ты попал по короблю соперника? Введи 'п'(попала) или 'м'(мимо): ");
-			scanf("%c", &otvet);
-
-			if (otvet == 'п' || otvet == 'П') {
-				hitsGrid[stroka][stolb] = 'X';
-				printf("Попадание отмечено на поле выстрелов!\n");
-			}
-			else {
-				hitsGrid[stroka][stolb] = 'O';
-				printf("Промах отмечен на поле выстрелов!\n");
-			}
+			my_turn = false;
 		}
 		else {
-			printf("Неправильно ввела координаты! Ход пропущен.\n");
-		}
-	}
+			if (stolb_char >= 'а' && stolb_char <= 'я') stolb_char = stolb_char - 'а' + 'А';
+			if (stolb_char >= 'А' && stolb_char <= 'И') stolb = stolb_char - 'А' + 1;
+			else if (stolb_char == 'К') stolb = 10;
 
-	while (getchar() != '\n');
+			if (stroka >= 1 && stroka <= 10 && stolb != -1) {
+				while (getchar() != '\n');
+				char otvet;
+				printf("Ты попал по короблю соперника? Введи 'п'(попала) или 'м'(мимо): ");
+				scanf("%c", &otvet);
 
-	system("cls");
-	printf("Поле попаданий:\n");
-	printGrid(hitsGrid);
-	printf("Поле наших кораблей:\n");
-	printGrid(shipsGrid);
-
-	int vr_stroka = -1;
-	char vr_stolb_char;
-	int vr_stolb = -1;
-
-	printf("Сейчас ход соперника! Введите координаты выстрела соперника: ");
-	int vr_res = scanf("%d%c", &vr_stroka, &vr_stolb_char);
-
-	if (vr_stroka == 0) return false;
-
-	if (vr_res != 2) {
-		printf("Неверный формат! Ход пропущен.\n");
-		while (getchar() != '\n');
-	}
-	else {
-		if (vr_stolb_char >= 'а' && vr_stolb_char <= 'я') vr_stolb_char = vr_stolb_char - 'а' + 'А';
-		if (vr_stolb_char >= 'А' && vr_stolb_char <= 'И') vr_stolb = vr_stolb_char - 'А' + 1;
-		else if (vr_stolb_char == 'К') vr_stolb = 10;
-
-		if (vr_stroka >= 1 && vr_stroka <= 10 && vr_stolb != -1) {
-			if (shipsGrid[vr_stroka][vr_stolb] == 'K') {
-				shipsGrid[vr_stroka][vr_stolb] = 'X';
-				printf("Соперник попал по твоему кораблю!\n");
-			}
-			else {
-				if (shipsGrid[vr_stroka][vr_stolb] != 'X') {
-					shipsGrid[vr_stroka][vr_stolb] = 'O';
+				if (otvet == 'п' || otvet == 'П') {
+					hitsGrid[stroka][stolb] = 'X';
+					printf("Попадание отмечено на поле выстрелов! Стреляй еще раз.\n");
 				}
-				printf("Соперник промахнулся!\n");
+				else {
+					hitsGrid[stroka][stolb] = 'O';
+					printf("Промах отмечен на поле выстрелов!\n");
+					my_turn = false;
+				}
+			}
+			else {
+				printf("Неправильно ввела координаты! Ход пропущен.\n");
+				my_turn = false;
 			}
 		}
+
+		while (getchar() != '\n');
+
+		system("cls");
+		printf("Поле попаданий:\n");
+		printGrid(hitsGrid);
+		printf("Поле наших кораблей:\n");
+		printGrid(shipsGrid);
+	}
+
+	bool enemy_turn = true;
+	while (enemy_turn) {
+		int vr_stroka = -1;
+		char vr_stolb_char;
+		int vr_stolb = -1;
+
+		printf("Сейчас ход соперника! Введите координаты выстрела соперника: ");
+		int vr_res = scanf("%d%c", &vr_stroka, &vr_stolb_char);
+
+		if (vr_stroka == 0) return false;
+
+		if (vr_res != 2) {
+			printf("Неверный формат! Ход пропущен.\n");
+			while (getchar() != '\n');
+			enemy_turn = false;
+		}
 		else {
-			printf("Неправильно ввела координаты врага! Ход пропущен.\n");
+			if (vr_stolb_char >= 'а' && vr_stolb_char <= 'я') vr_stolb_char = vr_stolb_char - 'а' + 'А';
+			if (vr_stolb_char >= 'А' && vr_stolb_char <= 'И') vr_stolb = vr_stolb_char - 'А' + 1;
+			else if (vr_stolb_char == 'К') vr_stolb = 10;
+
+			if (vr_stroka >= 1 && vr_stroka <= 10 && vr_stolb != -1) {
+				if (shipsGrid[vr_stroka][vr_stolb] == 'K') {
+					shipsGrid[vr_stroka][vr_stolb] = 'X';
+					printf("Соперник попал по твоему кораблю! Он ходит снова.\n");
+
+					while (getchar() != '\n');
+					system("cls");
+					printf("Поле попаданий:\n");
+					printGrid(hitsGrid);
+					printf("Поле наших кораблей:\n");
+					printGrid(shipsGrid);
+				}
+				else {
+					if (shipsGrid[vr_stroka][vr_stolb] != 'X') {
+						shipsGrid[vr_stroka][vr_stolb] = 'O';
+					}
+					printf("Соперник промахнулся!\n");
+					enemy_turn = false;
+				}
+			}
+			else {
+				printf("Неправильно ввела координаты врага! Ход пропущен.\n");
+				enemy_turn = false;
+			}
 		}
 	}
 
