@@ -7,7 +7,6 @@
 const int DLINA = 12;
 const int SHIRINA = 12;
 
-// Вывод игрового поля
 void printGrid(char grid[DLINA][SHIRINA])
 {
     printf("    # А Б В Г Д Е Ж З И К #\n");
@@ -34,7 +33,7 @@ void printGrid(char grid[DLINA][SHIRINA])
     printf("\n");
 }
 
-// Очистка игрового поля
+
 void initGrid(char grid[DLINA][SHIRINA])
 {
     for (int i = 0; i < DLINA; i++)
@@ -53,7 +52,7 @@ void initGrid(char grid[DLINA][SHIRINA])
     }
 }
 
-// Информация о кораблях
+
 void ship()
 {
     printf("ВИДЫ КОРАБЛЕЙ И ИХ КОЛИЧЕСТВО:\n");
@@ -63,7 +62,7 @@ void ship()
     printf("ПППП - 1\n\n");
 }
 
-// Перевод буквы в номер столбца
+
 int getColumn(char stolbStr[])
 {
     if (strcmp(stolbStr, "А") == 0)
@@ -112,7 +111,21 @@ int getColumn(char stolbStr[])
     }
 }
 
-// Ввод одной палубы
+bool checkAround(char shipsGrid[DLINA][SHIRINA], int stroka, int stolb)
+{
+    for (int i = stroka - 1; i <= stroka + 1; i++)
+    {
+        for (int j = stolb - 1; j <= stolb + 1; j++)
+        {
+            if (shipsGrid[i][j] == 'П')
+            {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
 void enterDeck(char shipsGrid[DLINA][SHIRINA])
 {
     int stroka;
@@ -121,26 +134,30 @@ void enterDeck(char shipsGrid[DLINA][SHIRINA])
 
     while (true)
     {
-        printf("Введите строку и букву столбца: ");
+        printf("Введите число и букву столбца: ");
         scanf("%d %9s", &stroka, stolbStr);
 
         stolb = getColumn(stolbStr);
 
         if (stroka >= 1 && stroka <= 10 &&
             stolb >= 1 && stolb <= 10 &&
-            shipsGrid[stroka][stolb] == '.')
+            shipsGrid[stroka][stolb] == '.' &&
+            checkAround(shipsGrid, stroka, stolb))
         {
             shipsGrid[stroka][stolb] = 'П';
+
+            printf("\nПоле после ввода палубы:\n");
+            printGrid(shipsGrid);
+
             return;
         }
         else
         {
-            printf("Ошибка! Неверные координаты или клетка занята. Повторите ввод.\n");
+            printf("Ошибка! Корабли не должны быть вместе. Повторите ввод.\n");
         }
     }
 }
 
-// Ввод всех кораблей
 void enterShips(char shipsGrid[DLINA][SHIRINA], int count, int decks, const char name[])
 {
     printf("Введите координаты для %s:\n", name);
@@ -159,7 +176,6 @@ void enterShips(char shipsGrid[DLINA][SHIRINA], int count, int decks, const char
     printf("\n");
 }
 
-// Расстановка кораблей
 void locationship(char shipsGrid[DLINA][SHIRINA])
 {
     enterShips(shipsGrid, 4, 1, "однопалубных кораблей (П)");
@@ -168,7 +184,6 @@ void locationship(char shipsGrid[DLINA][SHIRINA])
     enterShips(shipsGrid, 1, 4, "четырёхпалубного корабля (ПППП)");
 }
 
-// Ввод координат выстрела
 bool input(char hitsGrid[DLINA][SHIRINA], char shipsGrid[DLINA][SHIRINA])
 {
     int stroka;
@@ -176,7 +191,7 @@ bool input(char hitsGrid[DLINA][SHIRINA], char shipsGrid[DLINA][SHIRINA])
     char stolbStr[10];
     char nomber;
 
-    printf("Введите строку и столбец (А-К) или 0 для выхода: ");
+    printf("Введите число и букву или 0 для выхода: ");
 
     scanf("%d", &stroka);
 
@@ -221,7 +236,6 @@ bool input(char hitsGrid[DLINA][SHIRINA], char shipsGrid[DLINA][SHIRINA])
     }
 }
 
-// Главная функция
 int main()
 {
     setlocale(LC_ALL, "Russian");
@@ -234,20 +248,24 @@ int main()
     initGrid(hitsGrid);
     initGrid(shipsGrid);
 
-    // Показываем виды кораблей
+    printf("ПУСТОЕ ИГРОВОЕ ПОЛЕ:\n");
+    printGrid(shipsGrid);
+
     ship();
 
-    // Сначала расставляем все корабли
+    printf("НАЧИНАЕТСЯ РАССТАНОВКА КОРАБЛЕЙ!\n");
+    printf("Вводите координаты каждой палубы(корабля).\n\n");
+
     locationship(shipsGrid);
 
-    // После расстановки показываем поля
+    printf("Все корабли успешно размещены!\n\n");
+
     printf("Поле попаданий:\n");
     printGrid(hitsGrid);
 
     printf("Поле наших кораблей:\n");
     printGrid(shipsGrid);
 
-    // Начинаем игру
     while (input(hitsGrid, shipsGrid))
     {
         printf("\nПоле попаданий:\n");
