@@ -33,7 +33,6 @@ void printGrid(char grid[DLINA][SHIRINA])
     printf("\n");
 }
 
-
 void initGrid(char grid[DLINA][SHIRINA])
 {
     for (int i = 0; i < DLINA; i++)
@@ -52,7 +51,6 @@ void initGrid(char grid[DLINA][SHIRINA])
     }
 }
 
-
 void ship()
 {
     printf("ВИДЫ КОРАБЛЕЙ И ИХ КОЛИЧЕСТВО:\n");
@@ -61,7 +59,6 @@ void ship()
     printf("ППП - 2\n");
     printf("ПППП - 1\n\n");
 }
-
 
 int getColumn(char stolbStr[])
 {
